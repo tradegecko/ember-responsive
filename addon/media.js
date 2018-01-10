@@ -165,18 +165,18 @@ export default Ember.Service.extend({
     var matcher = (this.get('mql') || window.matchMedia)(query),
         isser = 'is' + classify(name);
 
-    var listener = (matcher) => {
-      if (this.get('isDestroyed')) {
+    var listener = function(matcher, _self) {
+      if (_self.get('isDestroyed')) {
         return;
       }
 
-      this.set(name, matcher);
-      this.set(isser, matcher.matches);
+      _self.set(name, matcher);
+      _self.set(isser, matcher.matches);
 
       if (matcher.matches) {
-        this.get('matches').addObject(name);
+        _self.get('matches').addObject(name);
       } else {
-        this.get('matches').removeObject(name);
+        _self.get('matches').removeObject(name);
       }
     };
     this.get('listeners')[name] = listener;
@@ -186,7 +186,7 @@ export default Ember.Service.extend({
         Ember.run(null, listener, matcher);
       });
     }
-    listener(matcher);
+    listener(matcher, this);
   }
 });
 
